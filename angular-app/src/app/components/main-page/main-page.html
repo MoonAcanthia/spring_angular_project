@@ -1,0 +1,56 @@
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" class="mx-auto h-10 w-auto" />
+    <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Hello {{username}}!</h2>
+  </div>
+</div>
+<div class="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
+  <table class="w-full text-left table-auto min-w-max text-slate-800">
+    <thead>
+      <tr class="font-semibold text-indigo-600 hover:text-indigo-500">
+        <th class="p-4 cursor-pointer select-none" (click)="sortOn('id')">
+          <p class="text-sm leading-none font-normal">
+            Id
+            @if (sortColumn === 'id') {
+              <span>{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+            }
+          </p>
+        </th>
+        <th class="p-4 cursor-pointer select-none" (click)="sortOn('username')">
+          <p class="text-sm leading-none font-normal">
+            Username
+            @if (sortColumn === 'username') {
+              <span>{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+            }
+          </p>
+        </th>
+        <th class="p-4 cursor-pointer select-none" (click)="sortOn('role')">
+          <p class="text-sm leading-none font-normal">
+            Role
+            @if (sortColumn === 'role') {
+              <span>{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+            }
+          </p>
+        </th>
+        <th class="p-4 cursor-pointer select-none" (click)="sortOn('enabled')">
+          <p class="text-sm leading-none font-normal">
+            Enabled
+            @if (sortColumn === 'enabled') {
+              <span>{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+            }
+          </p>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (d of data; track d.id) {
+        <tr>
+          <td class="p-4">{{d.id}}</td>
+          <td class="p-4">{{d.username}}</td>
+          <td class="p-4">{{d.role}}</td>
+          <td class="p-4">{{d.enabled}}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

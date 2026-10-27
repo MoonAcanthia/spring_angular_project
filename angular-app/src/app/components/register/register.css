@@ -1,0 +1,17 @@
+.rules
+{
+    color:gray;
+}
+
+.mt-1 ::placeholder
+{
+    color: var(--c, #4287f5);
+}
+.mt-2 ::placeholder
+{
+    color: var(--c, #4287f5);
+}
+.mt-3 ::placeholder
+{
+    color: var(--c, #4287f5);
+}
