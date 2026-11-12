@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class PasswordReset 
 {
+  showPassword = false;
   reg: number=0;
   specialCh: RegExp = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
   constructor(private userService: UserService, private router: Router){}
@@ -79,20 +80,19 @@ export class PasswordReset
         this.error=7;
         return
       }
-      const str: string = window.location.href;
-      console.log(str);
-      const result: string[] = str.split("token=");
-      console.log(result[1]);
-      this.userService.doReset_Password(result[1],formValue.password).subscribe
-      (
-         res => 
-        {
-          this.reg=res;
-        }
-      )
-      if(this.reg==0)
+      const token = window.location.href.split("token=")[1];
+      this.error = 0;
+      this.userService.doReset_Password(token, formValue.password).subscribe(res =>
       {
-        this.router.navigate(['/reset-success']);
-      }
+        this.reg = res;
+        if(res == 1)
+        {
+          this.router.navigate(['/reset-success']);
+        }
+        else if(res == 3)
+        {
+          this.error = 8;
+        }
+      });
   }
 }

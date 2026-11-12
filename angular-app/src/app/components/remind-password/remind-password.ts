@@ -9,14 +9,16 @@ import { Router } from '@angular/router';
   templateUrl: './remind-password.html',
   styleUrl: './remind-password.css'
 })
-export class RemindPassword 
+export class RemindPassword
 {
   constructor(private userService: UserService, private router: Router){}
   userForm : FormGroup = new FormGroup
   ({
     username: new FormControl('')
   });
-  request: String= new String;
+  sending = false;
+  sendError = false;
+
   doRemind()
   {
     const formValue= this.userForm.value;
@@ -29,16 +31,19 @@ export class RemindPassword
       }
       return
     }
-    this.request=formValue.username;
-    this.userService.doRemind_Password(this.request).subscribe ({
-      next:(res) => 
+    this.sending = true;
+    this.sendError = false;
+    this.userService.doRemind_Password(formValue.username).subscribe({
+      next: () =>
       {
-        console.log("Received Response: "+res.token);
-      }, error:(err) => 
+        this.router.navigate(['/password-send']);
+      },
+      error: (err) =>
       {
-        console.log("Error Received Response: "+err);
+        console.error("Remind password failed", err);
+        this.sending = false;
+        this.sendError = true;
       }
-    })
-    this.router.navigate(['/password-send']);
+    });
   }
 }

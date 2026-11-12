@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class Register 
 {
+  showPassword = false;
   reg: number=0;
   specialCh: RegExp = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
   constructor(private userService: UserService, private router: Router){}

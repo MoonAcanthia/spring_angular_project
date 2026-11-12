@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class Login 
 {
+  showPassword = false;
   
   constructor(private userService: UserService, private router:Router){}
   error=0;
