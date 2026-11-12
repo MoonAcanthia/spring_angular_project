@@ -3,7 +3,6 @@ package com.main.repositories;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,8 +14,12 @@ import com.main.login.LoginRequest;
 @Repository 
 public class UserRepositoryImpl implements UserRepository
 {
-    @Autowired 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public UserRepositoryImpl(JdbcTemplate jdbcTemplate)
+    {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public void addUser(String username,String password)

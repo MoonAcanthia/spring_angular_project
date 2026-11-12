@@ -1,7 +1,5 @@
 package com.main.configuration;
 
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,16 +24,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     private final JwtService jwtService;
-    @Autowired @Lazy
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+
     public JwtAuthenticationFilter
     (
         JwtService jwtService,
-        HandlerExceptionResolver handlerExceptionResolver
-    ) 
+        HandlerExceptionResolver handlerExceptionResolver,
+        UserRepository userRepository
+    )
     {
         this.jwtService = jwtService;
         this.handlerExceptionResolver = handlerExceptionResolver;
+        this.userRepository = userRepository;
     }
 
     @Override

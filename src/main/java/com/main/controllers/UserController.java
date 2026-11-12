@@ -4,7 +4,6 @@ package com.main.controllers;
 import java.util.List;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -36,16 +35,19 @@ public class UserController
 
     
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private JavaMailSender emailSender;
-    
-    private final JwtService jwtService= new JwtService();
+    private final JavaMailSender emailSender;
 
-    Users user;
-    LoginResponse token= new LoginResponse();
+    private final JwtService jwtService;
+
+    public UserController(UserRepository userRepository, JavaMailSender emailSender, JwtService jwtService)
+    {
+        this.userRepository = userRepository;
+        this.emailSender = emailSender;
+        this.jwtService = jwtService;
+    }
+
     //post
 
     @PostMapping("/register")
@@ -87,7 +89,7 @@ public class UserController
                 try
                 {
                     emailSender.send(message);
-                    user=userRepository.getUserByName(username);
+                    Users user = userRepository.getUserByName(username);
                     userRepository.addEmailAuth(user,auth_token);
                 }
                 catch(MailException e)
@@ -113,7 +115,7 @@ public class UserController
     @PostMapping("/auth")
     public void authenticateAccount(@RequestBody String auth_token)
     {
-        user=userRepository.emailAuth(auth_token);
+        Users user = userRepository.emailAuth(auth_token);
         if(user!=null)
         {
             userRepository.updateUserAuth(user.getId());
@@ -123,7 +125,7 @@ public class UserController
     @PostMapping("/password")
     public void remindPassword(@RequestBody String email) throws MessagingException
     {
-        user=userRepository.getUserByName(email);
+        Users user = userRepository.getUserByName(email);
         if(user!=null)
         {
            int password_token=userRepository.checkPassword(user);
@@ -199,13 +201,14 @@ public class UserController
     @PostMapping("/login")
     public LoginResponse authenticateAndGetToken(@RequestBody LoginRequest loginRequest) throws MessagingException
     { 
-        user=userRepository.getUserByName(loginRequest.getUsername());
+        Users user = userRepository.getUserByName(loginRequest.getUsername());
         if (user!=null) 
         {
             if(jwtService.validatePassword(loginRequest.getPassword(), user))
             {
                 if(user.isEnabled())
                 {
+                    LoginResponse token = new LoginResponse();
                     token.setToken(jwtService.generateToken(loginRequest.getUsername(),user));
                     if(jwtService.validateToken(token.getToken(), user))
                     {
