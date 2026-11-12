@@ -184,18 +184,16 @@ public class UserController
     @PostMapping("/password_reset")
     public ResponseEntity<Integer> resetPassword(@RequestBody String[] tablepass)
     {
-        System.out.println(tablepass[0]);
-        System.out.println(tablepass[1]);
-        if(jwtService.passwordValid(tablepass[1]))
-        {
-            tablepass[1]=jwtService.PasswordEncrypt(tablepass[1]);
-            userRepository.updatePassword(tablepass[0], tablepass[1]);
-            return ResponseEntity.ok(1);
-        }
-        else
+        if(!jwtService.passwordValid(tablepass[1]))
         {
             return ResponseEntity.ok(2);
         }
+        String encrypted=jwtService.PasswordEncrypt(tablepass[1]);
+        if(userRepository.updatePassword(tablepass[0], encrypted))
+        {
+            return ResponseEntity.ok(1);
+        }
+        return ResponseEntity.ok(3);
     }
     
     @PostMapping("/login")

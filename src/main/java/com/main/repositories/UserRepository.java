@@ -18,7 +18,7 @@ public interface UserRepository
     int checkPassword(Users user);
     void addPasswordRemind(Users user, int password_token);
     void refreshPasswordReset(Users user);
-    void updatePassword(String password_token,String password);
+    boolean updatePassword(String password_token,String password);
     List<Users> getAllUsers();
     Users getUserById(int id);
     Users getUserByName(String username);

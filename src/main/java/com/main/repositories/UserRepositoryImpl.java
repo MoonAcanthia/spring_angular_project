@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.main.entities.CustomRowMapper;
 import com.main.entities.Users;
@@ -95,20 +96,22 @@ public class UserRepositoryImpl implements UserRepository
         jdbcTemplate.update("UPDATE password_remind SET PASSWORD_START=? WHERE id=?",System.currentTimeMillis(),user.getId());
     }
 
-    @Override 
-    public void updatePassword(String password_token,String password)
+    @Override
+    @Transactional
+    public boolean updatePassword(String password_token,String password)
     {
        long time=System.currentTimeMillis();
        String findId="SELECT id from password_remind WHERE TOKEN=? AND ?-PASSWORD_START<=900000";
        try
        {
          int userId=jdbcTemplate.queryForObject(findId, Integer.class,password_token,time);
-        String updatePassword="UPDATE users SET PASSWORD=? WHERE id=?";
-        jdbcTemplate.update(updatePassword,password,userId);
+         jdbcTemplate.update("UPDATE users SET PASSWORD=? WHERE id=?",password,userId);
+         jdbcTemplate.update("DELETE FROM password_remind WHERE id=?",userId);
+         return true;
        }
        catch(EmptyResultDataAccessException e)
        {
-
+         return false;
        }
     }
 
